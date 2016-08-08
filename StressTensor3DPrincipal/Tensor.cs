@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StressTensor3DPrincipal
 {
@@ -16,6 +13,7 @@ namespace StressTensor3DPrincipal
         public double sxy { get; set; }
         public double syz { get; set; }
         public double sxz { get; set; }
+        private double I1, I2, I3;
         
         public Tensor(double sxx = 0.0, double syy = 0.0, double szz = 0.0, double sxy = 0.0, double syz = 0.0, double sxz = 0.0)
         {
@@ -80,7 +78,6 @@ namespace StressTensor3DPrincipal
                 
                 // https://en.wikiversity.org/wiki/Principal_stresses
                 
-                double I1, I2, I3;
                 I1 = sxx + syy + szz;
                 I2 = sxx * syy + syy * szz + szz * sxx - sxy * sxy - sxz * sxz - syz * syz;
                 I3 = sxx * syy * szz - sxx * syz * syz - syy * sxz * sxz - szz * sxy * sxy + 2 * sxy * sxz * syz;
@@ -108,5 +105,45 @@ namespace StressTensor3DPrincipal
         }
 
         private List<double> principals = new List<double>();
+
+        public double det { get { return I3; } }
+
+        public double CalculateDet(double[][] mat)
+        {
+            double result = 0;
+
+            if (mat.Length == 2)
+            {
+                result = mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+                return result;
+            }
+
+            for (int i = 0; i < mat[0].Length; i++)
+            {
+                double[][] temp = new double[mat.Length - 1][];
+                for (int x = 0; x < temp.Length; x++)
+                    temp[x] = new double[mat[0].Length - 1];
+
+                for (int j = 1; j < mat.Length; j++)
+                {
+                    System.Array.Copy(mat[j], 0, temp[j - 1], 0, i);
+                    System.Array.Copy(mat[j], i + 1, temp[j - 1], i, mat[0].Length - i - 1);
+                }
+
+                result += mat[0][i] * Math.Pow(-1, i) * CalculateDet(temp);
+            } 
+
+            return result;
+
+        }
+
+        internal double[][] toArray()
+        {
+            return new double[3][] {
+                new double[]{sxx,sxy,sxz},
+                new double[]{sxy,syy,syz},
+                new double[]{sxz,syz,szz}
+            };
+        }
     }
 }

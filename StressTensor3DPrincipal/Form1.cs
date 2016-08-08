@@ -38,15 +38,38 @@ namespace StressTensor3DPrincipal
             }
             catch
             {
-                values = new List<double>(new double[] { 3, 2, -1, 0, 0, 0 });
+                //values = new List<double>(new double[] { -2, 3, -1, 0, 0, 0 });
+                //values = new List<double>(new double[] { -19, 4.6, -8.3, -4.7, 11.8, 6.45 });
+                values = new List<double>(new double[] { 40, -80, 60, -20, 5, 10 });
             }
 
-            var tensor = new Tensor();
-
-            tensor.read(values);
+            var tensor = new Tensor(values);
             var principals = tensor.toPrincipal();
 
             MessageBox.Show(string.Join(", ", principals.ToArray()));
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            values = new List<double>(new double[] { 40, -80, 60, -20, 5, 10 });
+            var m = values.ToArray();
+            var tensor = new Tensor(values);
+            double[][] mat = new double[3][] {
+                new double[]{1,2,0},
+                new double[]{1,1,0},
+                new double[]{0,0,1}
+            };
+            //double[][] mat = new double[2][] {
+            //    new double[]{1,2},
+            //    new double[]{1,1},
+            //};
+
+            mat = tensor.toArray();
+
+            var p = tensor.toPrincipal();
+            var det = tensor.CalculateDet(mat);
+            var det2 = tensor.det;
+
         }
     }
 }
