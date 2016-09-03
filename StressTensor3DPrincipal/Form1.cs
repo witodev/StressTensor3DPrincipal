@@ -38,8 +38,6 @@ namespace StressTensor3DPrincipal
             }
             catch
             {
-                //values = new List<double>(new double[] { -2, 3, -1, 0, 0, 0 });
-                //values = new List<double>(new double[] { -19, 4.6, -8.3, -4.7, 11.8, 6.45 });
                 values = new List<double>(new double[] { 40, -80, 60, -20, 5, 10 });
             }
 
